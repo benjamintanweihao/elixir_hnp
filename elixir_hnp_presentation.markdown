@@ -51,6 +51,38 @@ MimeTypes.is_valid?("application/json")    #=> true
 
 ## Mix Build Tool
 
+## Processes
+
+```elixir
+defmodule Maps do
+
+  def map([], _), do: []
+  def map([h|t], func), do: [ func.(h) | map(t, func) ]
+
+  def child(element, func, parent) do
+    send parent, func.(element)
+  end
+  defp spawn_children(collection, func) do
+    map collection, fn element -> spawn(__MODULE__, :child, [element, func, self]) end
+  end
+
+  defp collect_results(pids) do
+    map pids, fn _ -> receive do: ( value -> value) end
+  end
+
+  def pmap(collection, func) do
+    collection |> spawn_children(func) |> collect_results
+  end
+end
+
+Maps.map [1, 2, 3], &(&1 * &1)
+# [1, 4, 9]
+
+Maps.pmap [1, 2, 3], &(&1 * &1)
+# [1, 4, 9]
+```
+
+
 ## Erlang Interoperability
 
 ... and still plays nice with Erlang
