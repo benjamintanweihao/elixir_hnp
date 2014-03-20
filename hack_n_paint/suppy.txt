@@ -1,0 +1,9 @@
+iex -S mix
+
+0. Notice the order of supervisors starting
+1. Kill Supervisor B
+2. Kill Server B
+3. Kill Supervisor D has the same effect as 2.
+4. Start some children on Supervisor C
+   Suppy.SupervisorC.start_child
+5. Kill a worker

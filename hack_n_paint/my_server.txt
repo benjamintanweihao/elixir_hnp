@@ -1,0 +1,4 @@
+{ :ok, pid } = :gen_server.start_link(MyServer, [:hello], [])
+:gen_server.call(pid, :pop)
+:gen_server.cast(pid, { :push, :world })
+:gen_server.call(pid, :pop)
